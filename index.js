@@ -1,45 +1,66 @@
-const inquirer = require('inquirer');
-const fs = require('fs');
-const util = require('util');
-
+const inquirer = require("inquirer");
+const generateMarkdown = require("./utils/generateMarkdown");
+const fs = require("fs");
 
 // array of questions for user
 const questions = [
     {
-        type: "input",
         name: "username",
-        message: "What is your GitHub username?",
+        message: "What is your Github user name?"
     },
     {
-        type: "input",
-        name: "email", 
-        message: "What is your email",
+        name: "email",
+        message: "What is your email?"
     },
     {
-        type: "input",
-        name: "Project Name",
-        message: "What is the name of your project?",
+        name: "title",
+        message: "What is your project titled?"
     },
     {
-        type: "input",
         name: "description",
-        message: "Write a short desciption of your project ",
+        message: "Please wite a short description of your project"
     },
     {
-        type: "input",
-        name: "",
-        message: "",
-    }
-
+        type: "list",
+        name: "license",
+        message: "What license does your project have?",
+        choices: ["MIT", "Apache", "Apache2", "GPL", "BSD", "None"]
+    },
+    {
+        name: "install",
+        message: "What command did you use to install dependencies?",
+        default: "npm i"
+    },
+    {
+        name: "userinfo",
+        message: "What does the user need to know about using your project?"
+    },
+    {
+        name: "tests",
+        message: "what are your testing instructions?"
+    },
+    {
+        name: "contribute",
+        message: "How can a user contribute to your project?"
+    },
 
 ];
 
 // function to write README file
 function writeToFile(fileName, data) {
+    fs.writeFile(fileName, data, (err) => {
+        if (err) throw err;
+        console.log(`&{fileName} saved.`)
+    })
 }
 
 // function to initialize program
 function init() {
+    inquirer
+        .prompt(questions)
+        .then(answers => {
+            writeToFile(answers.title + "README.md", generateMarkdown(answers));
+        })
 
 }
 
